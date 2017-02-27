@@ -107,6 +107,7 @@ define letsencrypt::request (
             Vcsrepo[$dehydrated_dir],
             File[$dehydrated_hook],
             File[$dehydrated_conf],
+            Exec['register-and-accept-terms'],
         ],
     }
 

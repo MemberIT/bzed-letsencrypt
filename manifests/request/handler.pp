@@ -32,6 +32,7 @@
 
 class letsencrypt::request::handler(
     $dehydrated_git_url,
+    $dehydrated_git_rev,
     $letsencrypt_ca,
     $hook_source,
     $hook_content,
@@ -43,11 +44,28 @@ class letsencrypt::request::handler(
 
     $handler_base_dir     = $::letsencrypt::params::handler_base_dir
     $handler_requests_dir = $::letsencrypt::params::handler_requests_dir
+    $dehydrated       = $::letsencrypt::params::dehydrated
     $dehydrated_dir   = $::letsencrypt::params::dehydrated_dir
     $dehydrated_hook  = $::letsencrypt::params::dehydrated_hook
     $dehydrated_conf  = $::letsencrypt::params::dehydrated_conf
     $letsencrypt_chain_request  = $::letsencrypt::params::letsencrypt_chain_request
     $letsencrypt_ocsp_request   = $::letsencrypt::params::letsencrypt_ocsp_request
+
+    $le_rat_command = join([
+        $dehydrated,
+        "-f ${dehydrated_conf}",
+        '--register --accept-terms',
+    ], ' ')
+
+    $le_rat_check_command = join([
+        "/usr/bin/test -s ${handler_base_dir}/accounts/*/account_key.pem",
+        '&&',
+        "/usr/bin/test -r ${handler_base_dir}/accounts/*/account_key.pem",
+        '&&',
+        "/usr/bin/test -s ${handler_base_dir}/accounts/*/registration_info.json",
+        '&&',
+        "/usr/bin/test -r ${handler_base_dir}/accounts/*/registration_info.json",
+    ], ' ')
 
     user { 'letsencrypt' :
         gid        => 'letsencrypt',
@@ -90,7 +108,7 @@ class letsencrypt::request::handler(
 
     vcsrepo { $dehydrated_dir :
         ensure   => latest,
-        revision => master,
+        revision => $dehydrated_git_rev,
         provider => git,
         source   => $dehydrated_git_url,
         user     => root,
@@ -139,6 +157,20 @@ class letsencrypt::request::handler(
         group   => letsencrypt,
         mode    => '0755',
         content => template('letsencrypt/letsencrypt_get_certificate_ocsp.sh.erb'),
+    }
+
+    exec { 'register-and-accept-terms':
+        user    => 'letsencrypt',
+        cwd     => $dehydrated_dir,
+        group   => 'letsencrypt',
+        unless  => $le_rat_check_command,
+        command => $le_rat_command,
+        require => [
+            User['letsencrypt'],
+            Group['letsencrypt'],
+            Vcsrepo[$dehydrated_dir],
+            File[$dehydrated_conf],
+        ],
     }
 
     Letsencrypt::Request<<| tag == $::fqdn |>>

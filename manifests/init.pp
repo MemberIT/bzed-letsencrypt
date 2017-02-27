@@ -16,6 +16,10 @@
 #   URL used to checkout the dehydrated using git.
 #   Defaults to the upstream github url.
 #
+# [*dehydrated_git_rev*]
+#   Revision used to checkout the dehydrated using git.
+#   Defaults to master branch.
+#
 # [*channlengetype*]
 #   Challenge type to use, default is 'dns-01'. Your dehydrated
 #   hook needs to be able to handle it.
@@ -71,6 +75,7 @@ class letsencrypt (
     $domains = [],
     $letsencrypt_sh_git_url = $::letsencrypt::params::letsencrypt_sh_git_url,
     $dehydrated_git_url = $letsencrypt_sh_git_url,
+    $dehydrated_git_rev = $::letsencrypt::params::dehydrated_git_rev,
     $challengetype = $::letsencrypt::params::challengetype,
     $hook_source = undef,
     $hook_content = undef,
@@ -96,6 +101,7 @@ class letsencrypt (
         } else {
             class { '::letsencrypt::request::handler' :
                 dehydrated_git_url        => $dehydrated_git_url,
+                dehydrated_git_rev        => $dehydrated_git_rev,
                 letsencrypt_ca            => $letsencrypt_ca,
                 hook_source               => $hook_source,
                 hook_content              => $hook_content,
