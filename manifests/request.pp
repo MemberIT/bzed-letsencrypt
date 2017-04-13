@@ -100,6 +100,7 @@ define letsencrypt::request (
         group   => 'letsencrypt',
         unless  => $le_check_command,
         command => $le_command,
+        timeout => 7200,
         require => [
             User['letsencrypt'],
             Group['letsencrypt'],

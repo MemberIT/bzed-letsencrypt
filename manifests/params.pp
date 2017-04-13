@@ -44,5 +44,7 @@ class letsencrypt::params {
     $letsencrypt_ca = 'https://acme-v01.api.letsencrypt.org/directory'
     $dh_param_size = 2048
     $manage_packages = true
+    $ext_configs = []
+    $bits_size = 4096
 
 }

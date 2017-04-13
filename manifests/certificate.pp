@@ -37,6 +37,7 @@ define letsencrypt::certificate (
     $challengetype = $::letsencrypt::challengetype,
     $letsencrypt_host = $::letsencrypt::letsencrypt_host,
     $dh_param_size = $::letsencrypt::dh_param_size,
+    $bits_size = $::letsencrypt::bits_size,
 ){
 
     validate_integer($dh_param_size)
@@ -54,6 +55,7 @@ define letsencrypt::certificate (
         letsencrypt_host => $letsencrypt_host,
         challengetype    => $challengetype,
         dh_param_size    => $dh_param_size,
+        bits_size        => $bits_size,
     }
 
 }

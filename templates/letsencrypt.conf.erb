@@ -74,3 +74,7 @@ https_proxy="<%= @letsencrypt_proxy -%>"
 export http_proxy
 export https_proxy
 <%- end %>
+
+<%- @ext_configs.each do |ext_config| -%>
+. <%= ext_config %>
+<%- end -%>

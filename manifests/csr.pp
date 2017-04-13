@@ -37,6 +37,7 @@ define letsencrypt::csr(
     $ensure = 'present',
     $force = true,
     $dh_param_size = 2048,
+    $bits_size = 4096,
 ) {
     require ::letsencrypt::params
 

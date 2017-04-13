@@ -85,6 +85,8 @@ class letsencrypt (
     $letsencrypt_proxy = undef,
     $dh_param_size = $::letsencrypt::params::dh_param_size,
     $manage_packages = $::letsencrypt::params::manage_packages,
+    $ext_configs = $::letsencrypt::params::ext_configs,
+    $bits_size = $::letsencrypt::params::bits_size,
 ) inherits ::letsencrypt::params {
 
     require ::letsencrypt::setup
@@ -107,6 +109,7 @@ class letsencrypt (
                 hook_content              => $hook_content,
                 letsencrypt_contact_email => $letsencrypt_contact_email,
                 letsencrypt_proxy         => $letsencrypt_proxy,
+                ext_configs               => $ext_configs,
             }
         }
         if ($::letsencrypt_crts and $::letsencrypt_crts != '') {
@@ -119,6 +122,7 @@ class letsencrypt (
         letsencrypt_host => $letsencrypt_host,
         challengetype    => $challengetype,
         dh_param_size    => $dh_param_size,
+        bits_size        => $bits_size,
     }
 
 }
