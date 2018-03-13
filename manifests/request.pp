@@ -100,6 +100,7 @@ define letsencrypt::request (
         group   => 'letsencrypt',
         unless  => $le_check_command,
         command => $le_command,
+        timeout => 7200,
         require => [
             User['letsencrypt'],
             Group['letsencrypt'],
@@ -107,6 +108,7 @@ define letsencrypt::request (
             Vcsrepo[$dehydrated_dir],
             File[$dehydrated_hook],
             File[$dehydrated_conf],
+            Exec['register-and-accept-terms'],
         ],
     }
 

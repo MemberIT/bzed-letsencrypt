@@ -22,7 +22,7 @@ CA="<%= @letsencrypt_ca -%>"
 BASEDIR="<%= @handler_base_dir -%>"
 
 # Output directory for challenge-tokens to be served by webserver or deployed in HOOK (default: $BASEDIR/.acme-challenges)
-#WELLKNOWN="${BASEDIR}/.acme-challenges"
+WELLKNOWN="${BASEDIR}/.acme-challenges"
 
 # Location of private account key (default: $BASEDIR/private_key.pem)
 PRIVATE_KEY="<%= @handler_base_dir -%>/<%= @private_key_name -%>.pem"
@@ -74,3 +74,7 @@ https_proxy="<%= @letsencrypt_proxy -%>"
 export http_proxy
 export https_proxy
 <%- end %>
+
+<%- @ext_configs.each do |ext_config| -%>
+. <%= ext_config %>
+<%- end -%>

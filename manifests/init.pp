@@ -16,6 +16,10 @@
 #   URL used to checkout the dehydrated using git.
 #   Defaults to the upstream github url.
 #
+# [*dehydrated_git_rev*]
+#   Revision used to checkout the dehydrated using git.
+#   Defaults to master branch.
+#
 # [*channlengetype*]
 #   Challenge type to use, default is 'dns-01'. Your dehydrated
 #   hook needs to be able to handle it.
@@ -71,6 +75,7 @@ class letsencrypt (
     $domains = [],
     $letsencrypt_sh_git_url = $::letsencrypt::params::letsencrypt_sh_git_url,
     $dehydrated_git_url = $letsencrypt_sh_git_url,
+    $dehydrated_git_rev = $::letsencrypt::params::dehydrated_git_rev,
     $challengetype = $::letsencrypt::params::challengetype,
     $hook_source = undef,
     $hook_content = undef,
@@ -80,6 +85,8 @@ class letsencrypt (
     $letsencrypt_proxy = undef,
     $dh_param_size = $::letsencrypt::params::dh_param_size,
     $manage_packages = $::letsencrypt::params::manage_packages,
+    $ext_configs = $::letsencrypt::params::ext_configs,
+    $bits_size = $::letsencrypt::params::bits_size,
 ) inherits ::letsencrypt::params {
 
     require ::letsencrypt::setup
@@ -96,11 +103,13 @@ class letsencrypt (
         } else {
             class { '::letsencrypt::request::handler' :
                 dehydrated_git_url        => $dehydrated_git_url,
+                dehydrated_git_rev        => $dehydrated_git_rev,
                 letsencrypt_ca            => $letsencrypt_ca,
                 hook_source               => $hook_source,
                 hook_content              => $hook_content,
                 letsencrypt_contact_email => $letsencrypt_contact_email,
                 letsencrypt_proxy         => $letsencrypt_proxy,
+                ext_configs               => $ext_configs,
             }
         }
         if ($::letsencrypt_crts and $::letsencrypt_crts != '') {
@@ -113,6 +122,7 @@ class letsencrypt (
         letsencrypt_host => $letsencrypt_host,
         challengetype    => $challengetype,
         dh_param_size    => $dh_param_size,
+        bits_size        => $bits_size,
     }
 
 }
